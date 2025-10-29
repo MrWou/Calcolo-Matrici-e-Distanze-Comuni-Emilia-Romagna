@@ -14,18 +14,7 @@ Questa fase è dedicata all'acquisizione delle coordinate geografiche di partenz
 * **Elaborazione:** Viene effettuata una richiesta paginata all'API. I dati vengono estratti e puliti in un **DataFrame Pandas** (`df_comuni`), registrando per ogni località il nome (`title`), la provincia, il codice ISTAT e le coordinate (`lat`, `lng`).
 * **Pulizia Cruciale:** Vengono rimossi i **duplicati** basati sulle coordinate per garantire che ogni punto geografico sia unico. Infine, le coordinate sono convertite nel formato **[Longitudine, Latitudine]** (`ors_coordinates`), il formato standard richiesto dal servizio di routing.
 
-### FASE 2: Calcolo della Matrice con OpenRouteService (ORS)
-
-Questa fase utilizza un servizio di terze parti per calcolare le distanze stradali effettive tra tutte le coppie di località.
-
-* **Servizio e Libreria:** Il codice si interfaccia con l'API di **[OpenRouteService](https://openrouteservice.org/) (ORS)** tramite la libreria Python `openrouteservice`.
-* **Logica del Routing:** Lo script itera su ogni località (**origine**). Per ogni origine, viene effettuata una singola richiesta all'API ORS per calcolare la distanza stradale verso tutte le altre località (**destinazioni**).
-    * Viene utilizzato il profilo di routing **`driving-car`**.
-    * La metrica richiesta è la distanza, espressa in **metri** (ma si può richiedere anche la durata).
-* **Post-Elaborazione:** Dopo aver popolato il DataFrame con le distanze in metri, il codice esegue questi passaggi finali:
-    * **Conversione:** Le distanze sono convertite in **chilometri** (`/ 1000`).
-    * **Simmetrizzazione:** La matrice viene resa simmetrica (si assume che la distanza A → B sia uguale a B → A) e la diagonale (distanza di un punto da sé stesso) è impostata a zero.
-    * **Output:** La matrice delle distanze finale (in Km) viene salvata in un file **CSV**.
+### FASE 2: Calcolo della Matrice 
 
 ---
 
